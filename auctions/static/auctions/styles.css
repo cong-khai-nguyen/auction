@@ -1,0 +1,25 @@
+body {
+    padding: 10px;
+}
+input{
+    margin:10px;
+}
+label{
+    font-size:17px;
+}
+
+tr.padding td {
+    padding-top: 30px;
+}
+
+.required:after {
+content:" *";
+color: red;
+
+}
+.submit{
+    text-align:center;
+}
+.bottom{
+    padding-top:100000px;
+}

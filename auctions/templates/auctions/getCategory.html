@@ -1,0 +1,85 @@
+
+{% extends "auctions/layout.html" %}
+
+{% block watchlist %}
+<li class="nav-item" >
+    <a class="nav-link" href="{% url 'watchlist' %}" >
+        <div style="float:left">Watchlist</div>  
+        {% if lenOfWat > 0 %}
+        <div style="background-color: #6C757D; border-radius: 5px; width:17px; float:right;margin-left:3px; height:20px; margin-top:3px;">
+            <p style="color:white;font-weight: bold ; font-size: 12px;text-align: center;">{{lenOfWat}}</p>
+        </div> 
+        {% endif %}
+    </a>
+</li>
+{% endblock %}
+{% block body %}
+    <h2>Category: {{category}}</h2>
+
+    
+
+
+
+
+    {% if user.is_authenticated %}
+    <style>
+        #container {
+            
+            width: 45%; height:auto;
+            
+          }
+          img {
+            max-width:100%;
+            max-height:auto;
+            
+          }
+          .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        }
+    </style>
+    {% for data in datas%}
+    
+    <div style ="padding: 0px 30px 210px 30px; border: 1px solid #d9d9d9; margin-top:20px;">
+        <div style="width: 30%; height:210px; float:left">
+            <div id="container" class="center">
+                {% if data.url%}
+                <a href="{% url 'item' data.list_name %}"><img src="/media/auctions/{{data.url}}" alt=""></a>
+                {% else %}
+                <a href="{% url 'item' data.list_name %}"><img src="/media/auctions/white.png" alt="" ></a>
+                {% endif %}
+            </div>
+            
+        </div>
+         
+         <div style="width: 60%; height:190px; float:right; padding-top:15px;">
+            <div> 
+                <div>
+                    <h4>{{data.auction_list}}</h4>
+                </div>
+                <div style="padding-top:5px;">
+                    <h6 style ="display:inline; font-weight:bold;">Price: </h6>
+                    <h6 style ="display:inline;">${{data.starting_bid|stringformat:".2f"}}</h6>
+                </div>
+                {% if data.description%}
+                    <div style ="padding-top:10px;">
+                        <p style="font-weight:500;">{{data.description}}</p>
+                    </div>
+                    <div style ="padding-top:5px; color: #7F878E; font-size:14px; font-weight:500;">
+                        <p> Created {{data.timestamp}}</p>
+                     </div>
+                {% else %}
+                    <div style ="padding-top:20px; color: #7F878E; font-size:14px; font-weight:500;">
+                        <p> Created {{data.timestamp}}</p>
+                    </div>
+                {% endif %}
+                
+            </div>
+         </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    
+
+{% endblock %}

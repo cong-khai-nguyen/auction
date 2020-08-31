@@ -1,0 +1,61 @@
+
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% block watchlist %}
+<li class="nav-item" >
+    <a class="nav-link" href="{% url 'watchlist' %}" >
+        <div style="float:left">Watchlist</div>  
+        {% if lenOfWat > 0 %}
+        <div style="background-color: #6C757D; border-radius: 5px; width:17px; float:right;margin-left:3px; height:20px; margin-top:3px;">
+            <p style="color:white;font-weight: bold ; font-size: 12px;text-align: center;">{{lenOfWat}}</p>
+        </div> 
+        {% endif %}
+    </a>
+</li>
+{% endblock %}
+{% block body %}
+    
+    <h2>Create List</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <table>
+            <tr>
+                <td><label>Listing Title:</label></td>
+                <td  class="required"><input type="text" name ="list_name" required title="Required"></td>
+            </tr>
+            
+            <tr>
+                <td><label >Starting Bid:</label></td>
+                <td  class="required"><input type="number" name ="bid" min = 1 required title="Required"></td>
+            </tr>
+        
+
+    
+            <tr class="padding">
+                <td><h4>Optional</h4></td>
+            </tr>
+            <tr>
+                <td><label>Description:</label></td>
+                <td><div style="margin:10px;">
+                    <textarea name="description" id="" cols="23" rows="2"></textarea>
+                  </div></td>
+            </tr>
+            <tr>
+                <td><label>URL for an image:</label></td>
+                <td><input type="url" name="image_url" placeholder="https://example.com" pattern="https://.*" title="e.g. google.com, isitnewyear.com, etc"></td>
+            </tr>
+            <tr>
+                <td><label>Category:</label></td>
+                <td><input type="text" name="category" title="e.g. Fashion, Toys, Electronics, Home, etc"></td>
+            </tr>
+        </table>
+        
+        <div class= "submit">
+            <button class="btn btn-primary" type="submit"> Create Listing</button>
+        </div>
+        
+    </form>
+    </fieldset>
+{% endblock %}

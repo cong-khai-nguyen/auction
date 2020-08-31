@@ -1,0 +1,95 @@
+
+{% extends "auctions/layout.html" %}
+
+{% block watchlist %}
+<li class="nav-item" >
+    <a class="nav-link" href="{% url 'watchlist' %}" >
+        <div style="float:left">Watchlist</div>  
+        {% if lenOfWat > 0 %}
+        <div style="background-color: #6C757D; border-radius: 5px; width:17px; float:right;margin-left:3px; height:20px; margin-top:3px;">
+            <p style="color:white;font-weight: bold ; font-size: 12px;text-align: center;">{{lenOfWat}}</p>
+        </div> 
+        {% endif %}
+    </a>
+</li>
+{% endblock %}
+
+{% block body %}
+
+    <style>
+        .description{
+            font-size:18px;
+            color:black;
+        }
+        .container {
+            margin-top:20px;
+            text-align:center;
+            max-width: 25%; height:auto;
+          }
+        img {
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            
+        }
+        .input{
+            background-color: #6C757D; 
+            width:77px; 
+            border-radius: 7px; 
+            margin-top:15px;
+            border-color: white; 
+            color:white;
+            font-weight: bold; 
+            font-size: 14px;
+            text-align: center; 
+            border-style: solid; 
+            height:26px;
+            
+        }
+    </style>
+    <header>
+        {% if messages %}
+        <div class="alert alert-primary border text-center" role="alert" style ="margin-right:-20px; margin-left:-20px;">
+            {% for message in messages %}
+            {{ message}}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+    </header>
+
+
+    {% for data in datas %}
+        <h2>Closed Listing: {{data.auction_list}}</h2>
+    
+        <div class="container">
+            {% if data.url %}
+            <img draggable="false" src="/media/auctions/{{data.url}}" alt="" class="img-fluid">
+            {% else %}
+            <img draggable="false" src="/media/auctions/white.png" alt="" class="img-fluid">
+            {% endif %}
+        </div>
+        <div>
+            <p class="description">{{data.description}}</p>
+        </div>
+        <div>
+            <h3>${{data.starting_bid|stringformat:".2f"}}</h3>
+        </div>
+       
+    
+        
+        <div style = "margin-top:26px;">
+            <h3>Details</h3>
+            <ul>
+                <li>Listed by: <a href="">{{data.user_id}}</a></li>
+                {% if data.category%}
+                    <li>Category: {{data.category}}</li>
+                {% else %}
+                    <li>Category: No Category Listed</li>
+                {% endif %}
+            </ul>
+        </div>
+         
+    
+    {% endfor %}
+{% endblock %}

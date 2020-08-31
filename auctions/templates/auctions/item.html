@@ -1,0 +1,269 @@
+
+{% extends "auctions/layout.html" %}
+
+{% block watchlist %}
+<li class="nav-item" >
+    <a class="nav-link" href="{% url 'watchlist' %}" >
+        <div style="float:left">Watchlist</div>  
+        {% if lenOfWat > 0 %}
+        <div style="background-color: #6C757D; border-radius: 5px; width:17px; float:right;margin-left:3px; height:20px; margin-top:3px;">
+            <p style="color:white;font-weight: bold ; font-size: 12px;text-align: center;">{{lenOfWat}}</p>
+        </div> 
+        {% endif %}
+    </a>
+</li>
+{% endblock %}
+
+{% block body %}
+
+    <style>
+        .description{
+            font-size:18px;
+            color:black;
+        }
+        #container {
+            margin-top:20px;
+           
+            max-width: 25%; height:auto;
+          }
+        img {
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            
+        }
+        .input{
+            background-color: #6C757D; 
+            width:77px; 
+            border-radius: 7px; 
+            margin-top:15px;
+            border-color: white; 
+            color:white;
+            font-weight: bold; 
+            font-size: 14px;
+            text-align: center; 
+            border-style: solid; 
+            height:26px;
+            
+        }
+        .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+        }
+
+
+
+        *
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .div
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f6f6;
+            font-family: arial;
+        }
+        .container2
+        {
+            width: 600px;
+            border: 2px solid #333;
+            padding: 15px 10px;
+        }
+        .container2 h3
+        {
+            text-align: center;
+            margin-bottom: 15px
+        }
+        .input1
+        {
+            height: 20px;
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #aaa;
+            background-color: transparent;
+            margin-bottom: 10px;
+            resize: none;
+            outline: none;
+            transition: .5s;
+           
+        }
+
+        .input2, .input3
+        {
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .input2
+        {
+            color: #fff;
+            background-color: #273c75
+        }
+        .input3
+        {
+            color: #333;
+            background-color: transparent
+        }
+        
+
+    </style>
+    <header>
+        {% if messages %}
+        <div class="alert alert-primary border text-center" role="alert" style ="margin-right:-20px; margin-left:-20px;">
+            {% for message in messages %}
+            {{ message}}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+    </header>
+
+
+    {% for data in datas %}
+        <h2>Listing: {{data.auction_list}}</h2>
+        <form action="{% url 'watchlist' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" value={{data.list_name}} name ="list_name" hidden>
+            <div style ="margin-left:-10px">
+            <input type="submit" class="input" value="Watchlist">
+            </div>
+            
+        </form>
+        </button>
+        <div id="container" class= "center">
+            {% if data.url %}
+            <img draggable="false" src="/media/auctions/{{data.url}}" alt="" class="img-fluid">
+            {% else %}
+            <img draggable="false" src="/media/auctions/white.png" alt="" class="img-fluid">
+            {% endif %}
+        </div>
+        <div>
+            <p class="description">{{data.description}}</p>
+        </div>
+        <div>
+            <h3>${{data.starting_bid|stringformat:".2f"}}</h3>
+        </div>
+        {% if min and highest%}
+        <div style="margin-top:20px; margin-bottom:-15px;">
+            <p style="font-size: 15px; color:black;"> {{length}} bid(s) so far. Your bid is the current bid.</p>
+        </div>
+        
+            <form method="POST"> 
+                {% csrf_token %}
+            <div style="margin-right:10px; margin-left:-10px;">
+                
+                <input placeholder="Bid" class="form-control " min ={{min}} type="number" name="bids" value = {{highest}} step=0.01>
+                <input type="text" name="list_id" value={{data.id}} hidden>
+                <input type="text" name="list_name" value={{data.list_name}} hidden>
+                <input type="text" name ="link" value ={{data.list_name}} hidden>
+
+            </div>
+            <div>
+                <button class="btn btn-primary mb-2" type = "submit">Place Bid</button>
+            </div>
+            </form>
+        {% else %}
+            <form action="{% url 'index' %}" method ="POST">
+                {% csrf_token %}
+                <input type="text" value = {{currentb}} name ="bid" hidden>
+                <input type="text" value={{data.list_name}} hidden name ="object_id">
+                <input type="text" value ={{bidder}} hidden name="winner">
+            <div style="margin-top:20px;">
+                <p style="font-size: 16px; color:black;"> {{length}} bid(s) so far.</p>
+            </div>
+            <div>
+                <p style="font-size: 17px; color:black;"> Current Bid: ${{currentb|stringformat:".2f"}}</p>
+            </div>
+            <div>
+                <p style="font-size: 17px; color:black;"> Bidder:  <a href="">{{bidder}}</a></p>
+            </div>
+            <div style="text-align:center; margin-right:-8px; margin-left:-9px;">
+                <button class="btn btn-warning mb-2  btn-block" type = "submit" style="font-size:19px;">Close Auction</button>
+            </div>
+            </form>
+        {% endif %}
+        <div style = "margin-top:26px;">
+            <h3>Details</h3>
+            <ul>
+                <li>Listed by: <a href="">{{data.user_id}}</a></li>
+                {% if data.category%}
+                    <li>Category: {{data.category}}</li>
+                {% else %}
+                    <li>Category: No Category Listed</li>
+                {% endif %}
+            </ul>
+        </div>
+        <div style = "margin-top:26px;">
+            <div class="container2 center">
+                <h3>Leave Us a Comment</h3>
+                <form action="{% url 'comment' %}" method="POST">
+                    {% csrf_token %}
+                <input type="text" placeholder='Add Your Comment' class="input1" name="input" required></input>
+                <div >
+                    <input type="text" value={{item}} name = "id" hidden>
+                    
+                <input type="submit" value='Comment' class="input2">
+                <input type="reset" value="Cancel" class ="input3">
+                </div>
+                </form>
+              </div>
+        </div>
+
+        <div style = "margin-top:40px;">
+            <h3>Comments</h3>
+            <div style="color:black" >
+                {% if comments %}
+                {% for comment in comments %}
+                <div class="row" style="text-align:left; margin-top:26px;">
+                <div class="col-1"> 
+                </div>
+                <div class="col-10">
+                    <p style="color:#9C969E; float:right;">{{comment.timestamp}}</p>
+                </div>
+                <div class="col-1">
+                </div>
+                </div>
+
+                <div class="row" style="text-align:left;">
+                    <div class="col-1"> 
+                    </div>
+                    <div class="col-10">
+                    <a href="">{{comment.comment_user_id.username}}</a>
+                    <p style="margin-top:10px; text-align:justify;">{{ comment.comments }}</p>
+                    </div>
+                    <div class="col-1">
+                      
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+                {% else %}
+                <p style ="margin-top:100px; margin-bottom: 100px; text-align:center; font-size:25px; color:black;">No Comment To Display</p> 
+                {% endif %}                
+            </div>
+
+
+
+            
+
+        </div>
+
+
+
+
+         
+    
+    {% endfor %}
+{% endblock %}

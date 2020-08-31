@@ -1,0 +1,48 @@
+{% extends "auctions/layout.html" %}
+
+{% block watchlist %}
+<li class="nav-item" >
+    <a class="nav-link" href="{% url 'watchlist' %}" >
+        <div style="float:left">Watchlist</div>  
+        {% if lenOfWat > 0 %}
+        <div style="background-color: #6C757D; border-radius: 5px; width:17px; float:right;margin-left:3px; height:20px; margin-top:3px;">
+            <p style="color:white;font-weight: bold ; font-size: 12px;text-align: center;">{{lenOfWat}}</p>
+        </div> 
+        {% endif %}
+    </a>
+</li>
+{% endblock %}
+{% block body %}
+    <style>
+        .center{
+            text-align:center;
+        }
+        
+    </style>
+   
+
+    <div id = "container">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="border p-3">
+               <legend class="w-auto"  style="font-size:33px">Browse for specific category</h3></legend>
+               <div style ="font-size:18px; padding-top:100px;" class="center ">
+                  <label style="font-size:18px; margin-right:20px;">Select category:</label>
+                  <select name ="category_type" required>
+                    <option  selected value disabled> Category </option>
+                    {% for list in listOfcategory %}
+                    
+                    <option value = {{list}} >{{list}}</option>
+                    {% endfor %}
+                    
+                  </select>
+                </div>
+                <div class="center" style="margin-top:10px; padding-bottom:100px;">
+                    <button class="btn btn-primary mb-2" type = "submit" style="font-size:20px;">Browse</button>
+                </div>
+            </fieldset>
+         </form>
+    </div>
+
+
+{% endblock %}
